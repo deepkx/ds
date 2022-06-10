@@ -1,0 +1,271 @@
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
+
+///structure declaration
+struct Node
+{
+    int data;
+    struct Node* lchild;
+    struct Node* rchild;
+};
+
+///class declaration
+class BT
+{
+    struct Node* root;
+public:
+    BT()
+    {
+        root = NULL;
+    }
+    Node* create(struct Node* &root,int data);
+    void displayPreorder(struct Node* root);
+    void displayInorder(struct Node* root);
+    void displayPostorder(struct Node* root);
+    void Search(struct Node* root,int key);
+    int Count(struct Node* root);
+    Node* findMin(struct Node* root);
+    Node* findMax(struct Node* root);
+    int Sum(struct Node* root);
+    int height(struct Node* root);
+};
+
+///Creation
+Node* BT :: create(struct Node* &root,int data)
+{
+    int elt;
+    struct Node* n = new Node;
+    n->data = data;
+    if(data == -1)
+    {
+        return NULL;
+    }
+    cout<<"Enter the left child of (-1 for no node) "<<n->data<<" :";
+    cin>>elt;
+    n->lchild = create(n->lchild,elt);
+    cout<<"Enter the right child of (-1 for no node) "<<n->data<<" :";
+    cin>>elt;
+    n->rchild = create(n->rchild,elt);
+    root = n;
+    return root;
+}
+
+///PreOrder
+void BT :: displayPreorder(struct Node* root)
+{
+    if(root == NULL)
+    {
+        return ;
+    }
+    if(root != NULL)
+    {
+        cout<<root->data<<"-->";
+        displayPreorder(root->lchild);
+        displayPreorder(root->rchild);
+    }
+}
+
+///InOrder
+void BT :: displayInorder(struct Node* root)
+{
+    if(root == NULL)
+    {
+        return ;
+    }
+    if(root != NULL)
+    {
+        displayInorder(root->lchild);
+        cout<<root->data<<"-->";
+        displayInorder(root->rchild);
+    }
+}
+
+///PostOrder
+void BT :: displayPostorder(struct Node* root)
+{
+    if(root == NULL)
+    {
+        return ;
+    }
+    if(root != NULL)
+    {
+        displayPostorder(root->lchild);
+        displayPostorder(root->rchild);
+        cout<<root->data<<"-->";
+    }
+}
+
+///Search
+void BT :: Search(struct Node* root,int key)
+{
+    if(root == NULL)
+    {
+        return ;
+    }
+    if(root->data == key)
+    {
+        cout<<"Found"<<endl;
+        return ;
+    }
+    else
+    {
+        Search(root->lchild,key);
+        Search(root->rchild,key);
+    }
+}
+
+///Count
+int BT :: Count(struct Node* root)
+{
+    if(root == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        return Count(root->lchild) + 1 + Count(root->rchild);
+    }
+}
+
+///Minimum
+Node* BT :: findMin(struct Node* root)
+{
+    if(!root)
+        return NULL;
+    struct Node* minm = root;
+    struct Node* minmLeft = findMin(root->lchild);
+    struct Node* minmRight = findMin(root->rchild);
+    if(minmLeft)
+    {
+        if (minmLeft->data < minm->data)
+        {
+            minm = minmLeft;
+        }
+    }
+    if(minmRight)
+    {
+        if (minmRight->data < minm->data)
+        {
+            minm = minmRight;
+        }
+    }
+    return minm;
+}
+
+///Maximum
+Node* BT :: findMax(struct Node* root)
+{
+    if(!root)
+        return NULL;
+    struct Node* maxm = root;
+    struct Node* maxmLeft = findMax(root->lchild);
+    struct Node* maxmRight = findMax(root->rchild);
+    if(maxmLeft)
+    {
+        if (maxmLeft->data > maxm->data)
+        {
+            maxm = maxmLeft;
+        }
+    }
+    if(maxmRight)
+    {
+        if (maxmRight->data > maxm->data)
+        {
+            maxm = maxmRight;
+        }
+    }
+    return maxm;
+}
+
+///Sum
+int BT :: Sum(struct Node* root)
+{
+    if(root == NULL)
+    {
+        return 0;
+    }
+    if(root != NULL)
+    {
+        return root->data + Sum(root->lchild) + Sum(root->rchild);
+    }
+}
+
+///Height
+int BT :: height(struct Node* root)
+{
+    int left,right;
+    if(root == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        left = height(root->lchild);
+        right = height(root->rchild);
+        return max(left,right) + 1;
+    }
+}
+
+///main begins
+int main()
+{
+    struct Node* root = NULL;
+    BT b;
+    int i,n,choice,data,key;
+    while(1)
+    {
+        cout<<"1.Creation"<<endl;
+        cout<<"2.Display"<<endl;
+        cout<<"3.Search"<<endl;
+        cout<<"4.Count"<<endl;
+        cout<<"5.Minimum"<<endl;
+        cout<<"6.Maximum"<<endl;
+        cout<<"7.Sum of all keys"<<endl;
+        cout<<"8.Height of the binary tree"<<endl;
+        cout<<"Enter your choice : ";
+        cin>>choice;
+        switch(choice)
+        {
+        case 1 :
+            cout<<"Enter the root element : ";
+            cin>>data;
+            b.create(root,data);
+            break;
+        case 2 :
+            cout<<"PREORDER"<<endl;
+            b.displayPreorder(root);
+            cout<<endl;
+            cout<<"INORDER"<<endl;
+            b.displayInorder(root);
+            cout<<endl;
+            cout<<"POSTORDER"<<endl;
+            b.displayPostorder(root);
+            cout<<endl;
+            break;
+        case 3 :
+            cout<<"Enter the key value to be searched : ";
+            cin>>key;
+            b.Search(root,key);
+            break;
+        case 4 :
+            cout<<"The number of nodes in the binary tree : "<<b.Count(root)<<endl;
+            break;
+        case 5 :
+            cout<<"The minimum element of the binary tree : "<<b.findMin(root)->data<<endl;
+            break;
+        case 6 :
+            cout<<"The maximum element of the binary tree : "<<b.findMax(root)->data<<endl;
+            break;
+        case 7 :
+            cout<<"The sum of all nodes in binary tree : "<<b.Sum(root)<<endl;
+            break;
+        case 8 :
+            cout<<"The height of the binary tree : "<<b.height(root)<<endl;
+            break;
+        default :
+            exit(0);
+        }
+    }
+    return 0;
+}
