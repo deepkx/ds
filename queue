@@ -1,0 +1,160 @@
+#include<iostream>
+using namespace std;
+struct node
+{
+    int data;
+    struct node *lchild,*rchild;
+};
+class Queue
+{
+    node *q[10];
+    int r,f;
+public:
+    Queue(){r=f=-1;}
+    void enqueue(node *temp);
+    node* dequeue();
+    int isempty();
+    int isfull();
+};
+int Queue::isempty()
+{
+    if(f==r)
+        return 1;
+    else
+        return 0;
+}
+int Queue :: isfull()
+{
+    if(r==10)
+        return 1;
+    else
+        return 0;
+}
+void Queue::enqueue(node* temp)
+{
+    if(isfull())
+    {
+        cout<<"Queue full"<<endl;
+    }
+    else
+    {
+        r=r+1;
+        q[r]=temp;
+    }
+}
+node* Queue:: dequeue()
+{
+    node *temp;
+    if(isempty())
+    {
+        cout<<endl<<"Queue Empty"<<endl;
+    }
+    else
+    {
+        f=f+1;
+        temp=q[f];
+    }
+    return temp;
+}
+class tree
+{
+        struct node* root,*ptr;
+    public:
+        void createtree(int elt);
+        void insertelt(int elt);
+        void display();
+        void preorder(node *root);
+        void postorder(node *root);
+        void inorder(node* root);
+};
+void tree::createtree(int elt)
+{
+    struct node *n=new node;
+    n->data=elt;
+    n->lchild=n->rchild=NULL;
+    root=n;
+}
+void tree::insertelt(int elt)
+{
+    Queue q;
+    node *temp;
+    q.enqueue(root);
+    while(!(q.isempty()))
+    {
+        temp=q.dequeue();
+        if(temp->lchild!=NULL)
+        {
+            q.enqueue(temp->lchild);
+        }
+        else
+        {
+            struct node *n=new node;
+            n->data=elt;
+            n->lchild=n->rchild=NULL;
+            temp->lchild=n;
+            break;
+        }
+        if(temp->rchild!=NULL)
+        {
+            q.enqueue(temp->rchild);
+        }
+        else
+        {
+            struct node *n=new node;
+            n->data=elt;
+            n->lchild=n->rchild=NULL;
+            temp->rchild=n;
+            break;
+        }
+    }
+}
+
+void tree:: display()
+{
+        cout<<endl<<"Pre order : "<<endl;
+    preorder(root);
+    cout<<endl<<"Inorder : "<<endl;
+    inorder(root);
+    cout<<endl<<"Post order : "<<endl;
+    postorder(root);
+}
+void tree::preorder(node *root)
+{
+
+    if(root!=NULL)
+    {
+        cout<<root->data<<"->";
+        preorder(root->lchild);
+        preorder(root->rchild);
+    }
+}
+void tree::inorder(node *root)
+{
+    if(root!=NULL)
+    {
+        inorder(root->lchild);
+        cout<<root->data<<"->";
+        inorder(root->rchild);
+    }
+}
+void tree::postorder(node *root)
+{
+    if(root!=NULL)
+    {
+        postorder(root->lchild);
+        postorder(root->rchild);
+        cout<<root->data<<"->";
+    }
+}
+int main()
+{
+    tree t1;
+    t1.createtree(10);
+    t1.insertelt(20);
+    t1.insertelt(1);
+    t1.insertelt(0);
+    t1.insertelt(3);
+    t1.insertelt(2);
+
+    t1.display();
+}
